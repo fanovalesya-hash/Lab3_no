@@ -16,13 +16,25 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBox x:Name="SearchTextBox" 
-                 Grid.Row="0" 
-                 Height="35" 
-                 FontSize="16" 
-                 Margin="0,0,0,15" 
-                 TextChanged="SearchTextBox_TextChanged"
-                 ToolTip="Поиск по артикулу, названию, описанию, категории, производителю или поставщику"/>
+        <Grid Grid.Row="0" Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" 
+                       Text="Поиск:" 
+                       FontSize="16" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,10,0"/>
+
+            <TextBox x:Name="SearchTextBox" 
+                     Grid.Column="1"
+                     Height="35" 
+                     FontSize="16" 
+                     TextChanged="SearchTextBox_TextChanged"
+                     ToolTip="Поиск по артикулу, названию, описанию, категории, производителю или поставщику"/>
+        </Grid>
 
         <ListBox x:Name="ProductsListBox" Grid.Row="1" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ListBox.ItemContainerStyle>
@@ -81,7 +93,7 @@
                             <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1" 
                                     HorizontalAlignment="Center" VerticalAlignment="Center"
                                     Width="80" Height="80">
-                                <TextBlock Text="{Binding Count}" 
+                                <TextBlock Text="{Binding Discount, StringFormat={}{0}%}" 
                                            FontSize="32" 
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center" 
