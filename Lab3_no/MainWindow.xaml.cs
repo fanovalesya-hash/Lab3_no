@@ -18,6 +18,7 @@ namespace Lab3_no
             LoadProducts();
         }
 
+
         private void LoadProducts(string searchText = "")
         {
             var allProducts = _context.Products
