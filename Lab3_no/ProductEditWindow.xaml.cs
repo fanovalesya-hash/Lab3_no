@@ -15,13 +15,10 @@ using System.Windows.Shapes;
 
 namespace Lab3_no
 {
-    /// <summary>
-    /// Логика взаимодействия для ProductEditWindow.xaml
-    /// </summary>
     public partial class ProductEditWindow : Window
     {
         private readonly ShopContext _context;
-        private readonly Product _editingProduct; // null, если режим добавления
+        private readonly Product _editingProduct;
         private readonly bool _isEditMode;
 
         public ProductEditWindow(Product product)
@@ -46,7 +43,6 @@ namespace Lab3_no
             }
         }
 
-        // Загружаем справочники в ComboBox-ы
         private void LoadDictionaries()
         {
             NameComboBox.ItemsSource = _context.ProductNames.OrderBy(n => n.Name).ToList();
@@ -55,7 +51,6 @@ namespace Lab3_no
             SupplierComboBox.ItemsSource = _context.Suppliers.OrderBy(s => s.Name).ToList();
         }
 
-        // Заполняем поля данными редактируемого товара
         private void LoadProductData()
         {
             IdTextBox.Text = _editingProduct.Id.ToString();
@@ -71,7 +66,6 @@ namespace Lab3_no
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация числовых полей
             if (!double.TryParse(PriceTextBox.Text, out double price) || price < 0)
             {
                 MessageBox.Show("Цена должна быть неотрицательным числом.", "Ошибка ввода", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -99,7 +93,6 @@ namespace Lab3_no
 
             if (_isEditMode)
             {
-                // Обновляем существующий товар
                 _editingProduct.NameId = (int)NameComboBox.SelectedValue;
                 _editingProduct.CategoryId = (int)CategoryComboBox.SelectedValue;
                 _editingProduct.ManufacturerId = (int)ManufacturerComboBox.SelectedValue;
@@ -113,7 +106,6 @@ namespace Lab3_no
             }
             else
             {
-                // Создаем новый товар с ID = Max + 1
                 int newId = _context.Products.Any() ? _context.Products.Max(p => p.Id) + 1 : 1;
 
                 var newProduct = new Product
@@ -127,8 +119,8 @@ namespace Lab3_no
                     Price = price,
                     Count = count,
                     Discount = discount,
-                    Article = "", // Артикул можно оставить пустым или генерировать
-                    Unit = "1"    // Единица измерения по умолчанию
+                    Article = "",
+                    Unit = "1"
                 };
 
                 _context.Products.Add(newProduct);
