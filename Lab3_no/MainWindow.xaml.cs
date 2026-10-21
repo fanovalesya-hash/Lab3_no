@@ -54,5 +54,57 @@ namespace Lab3_no
         {
             LoadProducts(SearchTextBox.Text);
         }
+
+        private void AddProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            var editWindow = new ProductEditWindow(null);
+            editWindow.ShowDialog();
+            LoadProducts(SearchTextBox.Text);
+        }
+
+        private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProductsListBox.SelectedItem is Product selectedProduct)
+            {
+                var result = MessageBox.Show($"Вы уверены, что хотите удалить товар \"{selectedProduct.Name?.Name}\"?",
+                                             "Подтверждение удаления",
+                                             MessageBoxButton.YesNo,
+                                             MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    bool isInOrder = _context.OrderArticles.Any(oa => oa.ProductId == selectedProduct.Id);
+
+                    if (isInOrder)
+                    {
+                        MessageBox.Show("Невозможно удалить товар, так как он присутствует в одном из заказов.",
+                                        "Ошибка удаления",
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Error);
+                    }
+                    else
+                    {
+                        _context.Products.Remove(selectedProduct);
+                        _context.SaveChanges();
+                        MessageBox.Show("Товар успешно удален.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        LoadProducts(SearchTextBox.Text);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите товар для удаления.", "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void ProductsListBox_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (ProductsListBox.SelectedItem is Product selectedProduct)
+            {
+                var editWindow = new ProductEditWindow(selectedProduct);
+                editWindow.ShowDialog();
+                LoadProducts(SearchTextBox.Text);
+            }
+        }
     }
 }
